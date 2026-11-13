@@ -1,0 +1,34 @@
+{
+  "name": "spark-report-converter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local HTML converter for Minecraft Spark sampler .sparkprofile reports",
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "source": "node scripts/package-source.mjs",
+    "release": "node scripts/build.mjs && node scripts/package-source.mjs && node scripts/package-release.mjs",
+    "test": "node test/build-library.mjs && node test/run-tests.mjs",
+    "test:browser": "npm run release && node test/build-library.mjs && node test/browser-acceptance.mjs",
+    "test:proof": "node test/playwright-proof.mjs",
+    "test:real-mapping": "node test/real-mapping-audit.mjs",
+    "test:release": "node test/check-release.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pako": "2.1.0",
+    "protobufjs": "7.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/pako": "2.0.3",
+    "esbuild": "0.25.0",
+    "playwright-core": "1.64.1",
+    "puppeteer-core": "24.15.0",
+    "typescript": "5.7.3"
+  }
+}

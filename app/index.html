@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spark 报告转换器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="page">
+        <header class="hero">
+            <h1>Spark 报告转换器</h1>
+            <p class="lede">
+                把 Minecraft Spark 的性能报告转换成 JSON，便于交给网页版 AI 分析。
+            </p>
+            <p class="scope">
+                支持 Windows 10/11 自带 Edge；只处理 <code>.sparkprofile</code> 报告。文件只在本机处理，不上传。
+            </p>
+        </header>
+
+        <section class="card">
+            <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="选择或拖入 .sparkprofile 文件">
+                <div class="drop-title">拖入 <code>.sparkprofile</code>，或点击选择文件</div>
+                <div class="drop-sub">文件不会上传；转换在浏览器内完成。</div>
+                <input id="file-input" type="file" accept=".sparkprofile,.sparkheap,.sparkhealth" hidden>
+            </div>
+
+            <div class="options">
+                <label class="check">
+                    <input id="skip-mappings" type="checkbox">
+                    <span>跳过联网映射（离线使用）</span>
+                </label>
+                <span class="option-note">映射请求失败默认暂停；主动勾选后允许未映射输出。</span>
+            </div>
+
+            <div id="status" class="status idle" role="status">等待选择 .sparkprofile 文件。</div>
+        </section>
+
+        <section id="mapping-gate" class="card gate" hidden role="alert">
+            <h2>转换已暂停：无法获取方法名映射</h2>
+            <p class="gate-lead">
+                当前无法获取方法名映射。未映射名称可能降低 AI 对调用链和问题的分析质量。
+            </p>
+            <ul class="gate-steps">
+                <li>检查网络连接，或稍后重试。</li>
+                <li>也可能是映射服务暂时不可用或映射数据无法解析。</li>
+                <li>如果接受质量下降，勾选“跳过联网映射”，然后重新选择报告。</li>
+            </ul>
+            <details id="gate-details" class="gate-details">
+                <summary>技术详情</summary>
+                <div class="detail-actions">
+                    <button id="gate-copy" type="button" class="button ghost">复制技术详情</button>
+                </div>
+                <pre id="gate-detail" class="detail"></pre>
+            </details>
+        </section>
+
+        <details id="error-details" class="card error-card" hidden>
+            <summary>转换失败 · 技术详情</summary>
+            <div class="detail-actions">
+                <button id="detail-copy" type="button" class="button ghost">复制技术详情</button>
+            </div>
+            <pre id="error-detail" class="detail"></pre>
+        </details>
+
+        <section id="result" class="card result" hidden>
+            <div class="result-head">
+                <div>
+                    <h2>合并 JSON 已生成</h2>
+                </div>
+                <div class="actions">
+                    <a id="download" class="button primary" href="#" download hidden>下载 JSON</a>
+                    <button id="reset" type="button" class="button ghost">重新选择</button>
+                </div>
+            </div>
+
+            <div id="result-file" class="result-file"></div>
+            <div id="sizes" class="sizes"></div>
+            <div id="mapping-status" class="mapping"></div>
+            <div id="mapping-quality" class="quality-warning" hidden></div>
+            <details id="mapping-error-details" class="mapping-detail" hidden>
+                <summary>映射失败 · 技术详情</summary>
+                <div class="detail-actions">
+                    <button id="mapping-copy" type="button" class="button ghost">复制技术详情</button>
+                </div>
+                <pre id="mapping-error-detail" class="detail"></pre>
+            </details>
+
+            <div class="privacy">
+                输出可能包含玩家名/UUID、服务器地址、<code>server.properties</code>、JVM 参数、世界坐标等敏感信息；上传或分享前请自行检查。
+            </div>
+
+            <div id="ai-warning" class="ai-warning" role="note">
+                <strong>AI 建议有风险：</strong>
+                分析可能出错，相关指令、配置修改或文件操作有风险。执行前备份存档；可能影响模组、配置或整个版本时，备份整个游戏版本文件夹；不要执行自己不理解且未备份的操作。
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <strong>Spark 报告转换器 v1.0.0</strong> ·
+                <a href="README.md">使用说明</a> ·
+                摘要逻辑基于
+                <a href="https://github.com/FastMirror-MC/spark-viewer-extract" target="_blank" rel="noopener">spark-viewer-extract</a>
+                （GPL-3.0）；详见 <code>NOTICE.md</code> 与 <code>LICENSE</code>。
+            </p>
+            <p>方法名映射会访问 <code>spark-mappings.lucko.me</code>，报告文件不会上传。</p>
+        </footer>
+
+        <noscript>
+            <p class="noscript">此工具需要启用 JavaScript 才能运行。</p>
+        </noscript>
+    </main>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
